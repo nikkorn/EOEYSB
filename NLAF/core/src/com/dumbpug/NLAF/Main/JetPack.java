@@ -57,6 +57,7 @@ public class JetPack {
 		this.posX = positionX - (jetPackFrame.getWidth() / 2);
 		this.posY = positionY - (jetPackFrame.getHeight() / 2);
 		startingHeight = (int) this.posY;
+		highestWindowedHeight = startingHeight;
 		jetPackFrame.setPosition(posX, posY);
 		jetEngineOffset = width*0.357;
 		// Fill our tanks.
@@ -252,7 +253,7 @@ public class JetPack {
 	 * Return the highest score that this jetpack has achieved within the bounds of the window.
 	 * @return
 	 */
-	public int getHighestWindowedScore() { return (int) (highestWindowedHeight-startingHeight) / 10; }
+	public int getHighestWindowedScore() { return (int) (highestWindowedHeight-startingHeight); }
 
 	public double getFuelLevelPercentageRight() {
 		return (fuelLevelRight/fuelTankLimit)*100;

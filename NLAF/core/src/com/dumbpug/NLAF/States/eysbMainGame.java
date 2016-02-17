@@ -283,6 +283,6 @@ public class eysbMainGame extends State {
 	}
 
 	public int getScore() {
-		return ((int)(testVertViewHeight / 10)) + jetPack.getHighestWindowedScore();
+		return (int) ((testVertViewHeight + jetPack.getHighestWindowedScore())/Constants.METER);
 	}
 }
