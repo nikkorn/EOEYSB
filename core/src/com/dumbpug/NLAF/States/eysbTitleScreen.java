@@ -21,7 +21,6 @@ public class eysbTitleScreen extends State {
 
 	Button playButton;
     Button infoButton;
-    Button settingsButton;
 	
 	eyspCloudGenerator cloudGenerator;
 	
@@ -64,16 +63,6 @@ public class eysbTitleScreen extends State {
         infoButton.setKeepAspectRatio(true);
         // we only want to active a button press when pushing on the sprite, not the control area.
         infoButton.setActiveAreaOnSprite(true);
-
-        // Set up our settings button control
-        settingsButton = new Button();
-        settingsButton.setControlSprite(new Sprite(new Texture(Gdx.files.internal("Button/btn_settings_up.png"))), true);
-        settingsButton.setActiveSprite(new Sprite(new Texture(Gdx.files.internal("Button/btn_settings_down.png"))));
-        // Stretch the control area to match whatever column it is in.
-        settingsButton.setStretchToColumn(true);
-        settingsButton.setKeepAspectRatio(true);
-        // we only want to active a button press when pushing on the sprite, not the control area.
-        settingsButton.setActiveAreaOnSprite(true);
 		
 		// Make a new InputManager for title screen!
 		InputManager inputManager = new InputManager();
@@ -84,7 +73,6 @@ public class eysbTitleScreen extends State {
 		// Add our test button control to the input manager.
 		inputManager.addControl(playButton);
         inputManager.addControl(infoButton);
-        inputManager.addControl(settingsButton);
 		
 		cloudGenerator = new eyspCloudGenerator();
 		
@@ -97,7 +85,7 @@ public class eysbTitleScreen extends State {
 		// Make button pane
 		pane = new Pane();
 		// Make pane as big as display
-		pane.setSize((int) (Gdx.graphics.getWidth()*0.7), (int) (Gdx.graphics.getHeight()*0.3));
+		pane.setSize((int) (Gdx.graphics.getWidth()*0.7), (int) (Gdx.graphics.getHeight()*0.2));
 		pane.setPosition((int) ((Gdx.graphics.getWidth()*0.3)/2), (int) (Gdx.graphics.getHeight()*0.12));
 
 		// Define Rows/Columns
@@ -118,25 +106,12 @@ public class eysbTitleScreen extends State {
         column2.setControl(infoButton, ControlOrientation.CENTER);
         column2.columnWidth = "*";
 
-        Row row4 = new Row();
-        row4.rowHeight = "5%";
-
-        Row row5 = new Row();
-        row5.rowHeight = "*";
-
-        Column column3 = new Column();
-        column3.setControl(settingsButton, ControlOrientation.CENTER);
-        column3.columnWidth = "*";
-
 		row1.addColumn(column1, 1);
 		row3.addColumn(column2, 1);
-		row5.addColumn(column3, 1);
 
 		pane.addRow(row1, 1);
 		pane.addRow(row2, 2);
 		pane.addRow(row3, 3);
-        pane.addRow(row4, 4);
-        pane.addRow(row5, 5);
 
 		// Organise and layout the pane to reflect everything we've configured for it.
 		pane.organise();
