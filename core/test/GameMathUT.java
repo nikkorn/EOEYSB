@@ -1,5 +1,5 @@
-import com.dumbpug.NLAF.Math.GameMath;
-import com.dumbpug.NLAF.Math.ScreenPoint;
+import com.dumbpug.eoeysb.Math.GameMath;
+import com.dumbpug.eoeysb.Math.ScreenPoint;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
