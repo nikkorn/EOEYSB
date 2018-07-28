@@ -2,13 +2,10 @@ package com.dumbpug.NLAF;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Preferences;
 import com.dumbpug.NLAF.FPSManagement.FPSManager;
 import com.dumbpug.NLAF.FPSManagement.Updateable;
-import com.dumbpug.NLAF.States.StateManager;
-
-import java.awt.DisplayMode;
+import com.dumbpug.NLAF.states.StateManager;
 
 public class Game extends ApplicationAdapter implements Updateable {
 	private FPSManager FPSM;

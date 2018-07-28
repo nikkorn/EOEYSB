@@ -1,6 +1,6 @@
 package com.dumbpug.NLAF.Input;
 
-import com.dumbpug.NLAF.Tools.ControlBase;
+import com.dumbpug.NLAF.tools.ControlBase;
 
 
 public interface InputListener {

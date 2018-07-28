@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.dumbpug.NLAF.Tools.Button;
-import com.dumbpug.NLAF.Tools.ControlBase;
-import com.dumbpug.NLAF.Tools.ControlBase.ControlType;
+import com.dumbpug.NLAF.tools.Button;
+import com.dumbpug.NLAF.tools.ControlBase;
+import com.dumbpug.NLAF.tools.ControlBase.ControlType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dumbpug.NLAF.Tools.Animation;
+import com.dumbpug.NLAF.tools.Animation;
 
 /**
  * Created by Nikolas Howard.
