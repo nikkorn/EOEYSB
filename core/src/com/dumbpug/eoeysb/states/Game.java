@@ -8,13 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dumbpug.eoeysb.Constants;
 import com.dumbpug.eoeysb.Input.InputManager;
 import com.dumbpug.eoeysb.scene.Scene;
+import com.dumbpug.eoeysb.scene.ThrusterControlPane;
 import com.dumbpug.eoeysb.scene.clouds.CloudGenerator;
 import com.dumbpug.eoeysb.scene.entities.EntityManager;
 import com.dumbpug.eoeysb.scene.hud.FuelTankMeters;
 import com.dumbpug.eoeysb.scene.hud.HeightCounter;
 import com.dumbpug.eoeysb.panel.ResultPanel;
-import com.dumbpug.eoeysb.tools.Column;
-import com.dumbpug.eoeysb.tools.Column.ControlOrientation;
 
 /**
  * The main game state.
@@ -23,12 +22,17 @@ public class Game extends State {
 	/**
 	 * The game scene.
 	 */
-	Scene scene;
+	private Scene scene;
+	/**
+	 * The thruster control pane.
+	 */
+	private ThrusterControlPane thrusterControlPane;
+	/**
+	 * The sprite batch to use in drawing the game.
+	 */
+	private SpriteBatch batch;
 
-	com.dumbpug.eoeysb.tools.Pane thrusterButtonPane;
-	com.dumbpug.eoeysb.tools.Button rightThruster;
-	com.dumbpug.eoeysb.tools.Button leftThruster;
-	SpriteBatch batch;
+
 	// World Sprites/Animations
 	Sprite fullSkyBackground;
 	Sprite blueSkyBase;
@@ -57,7 +61,7 @@ public class Game extends State {
 	float grassBaseMovementVertMultiplier = 1f;
 	float mountainRangeMovementVertMultiplier = 0.5f;
 	float blueSkyBaseMovementVertMultiplier = 0.2f;
-	float fullSkyMovementVertMultiplier = Constants.MOVEMENT_UNIT*0.0025f;
+	float fullSkyMovementVertMultiplier = Constants.MOVEMENT_UNIT * 0.0025f;
 	// Aspect Ratio of mountain range animation
 	float mountainRangeAspectRatio = 1.40909f;
 	
@@ -110,7 +114,10 @@ public class Game extends State {
 		fuelTankHUD = new FuelTankMeters();
         resultPanel = new ResultPanel();
         entityManager = new com.dumbpug.eoeysb.scene.entities.EntityManager();
-		setupThrusterControlPane();
+
+
+		// Create the thruster control pane.
+		this.thrusterControlPane = new ThrusterControlPane(inputManager);
 		// Create the game scene.
 		this.scene = new Scene();
 	}
@@ -121,7 +128,7 @@ public class Game extends State {
         // Is the round still in progress?
         if(inProgress) {
             // Move our jetpack and get the amount we need to essentially move the scene down by.
-            vertMovement = this.scene.getJetpack().move(leftThruster.isButtonPressed(), rightThruster.isButtonPressed());
+            vertMovement = this.scene.getJetpack().move(this.thrusterControlPane.isLeftThrusterButtonPressed(), this.thrusterControlPane.isRightThrusterButtonPressed());
             // Move up screen.
             testVertViewHeight += vertMovement;
             // Only generate clouds at a certain height
@@ -188,9 +195,6 @@ public class Game extends State {
 
 		// Draw the current game!
         drawState();
-
-        //System.out.println("FPS: " + Gdx.graphics.getFramesPerSecond());
-		System.out.println("HEIGHT%: " + this.getSkyHeightPercentage());
 	}
 
     /**
@@ -211,7 +215,11 @@ public class Game extends State {
 		launcherBase.draw(batch);
 		cloudGenerator.drawCloudsInBackground(batch);
         entityManager.draw(batch);
-		this.scene.getJetpack().draw(batch);
+
+		// Draw the scene.
+		this.scene.draw(batch);
+
+
 		cloudGenerator.drawCloudsInForeground(batch);
         heightCounter.drawScore(batch, getScore(), false);
 		fuelTankHUD.drawFuelTankHud(batch, this.scene.getJetpack().getFuelLevelPercentageLeft(), this.scene.getJetpack().getFuelLevelPercentageRight());
@@ -229,48 +237,6 @@ public class Game extends State {
 
 	@Override
 	public void renderStateLoading() {}
-	
-	/**
-	 * Sets up the thruster control pane.
-	 */
-	public void setupThrusterControlPane(){
-		thrusterButtonPane = new com.dumbpug.eoeysb.tools.Pane();
-		thrusterButtonPane.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		thrusterButtonPane.setPosition(0, 0);
-		
-		com.dumbpug.eoeysb.tools.Row thrusterButtonPaneRow = new com.dumbpug.eoeysb.tools.Row();
-		thrusterButtonPaneRow.rowHeight = "*";
-		thrusterButtonPane.addRow(thrusterButtonPaneRow, 1);
-		
-		Column leftThrusterColumn = new Column(); 
-		leftThrusterColumn.columnWidth = "50%";
-		
-		Column rightThrusterColumn = new Column(); 
-		rightThrusterColumn.columnWidth = "50%";
-		
-		thrusterButtonPaneRow.addColumn(leftThrusterColumn, 1);
-		thrusterButtonPaneRow.addColumn(rightThrusterColumn, 2);
-		
-		leftThruster = new com.dumbpug.eoeysb.tools.Button();
-		leftThruster.setActiveAreaOnSprite(false);
-		leftThruster.setStretchToColumn(true);
-		
-		rightThruster = new com.dumbpug.eoeysb.tools.Button();
-		rightThruster.setActiveAreaOnSprite(false);
-		rightThruster.setStretchToColumn(true);
-		
-		leftThrusterColumn.setControl(leftThruster, ControlOrientation.CENTER);
-		rightThrusterColumn.setControl(rightThruster, ControlOrientation.CENTER);
-		
-		thrusterButtonPane.organise();
-		
-		com.dumbpug.eoeysb.Input.InputManager inputManager = new com.dumbpug.eoeysb.Input.InputManager();
-		
-		inputManager.addControl(leftThruster);
-		inputManager.addControl(rightThruster);
-		
-		Gdx.input.setInputProcessor(inputManager);
-	}
 	
 	public int getSkyHeightPercentage(){
 		return (int) ((fullSkyBackground.getY() / -(fullSkyBackground.getHeight() - Gdx.graphics.getHeight())) * 100);
