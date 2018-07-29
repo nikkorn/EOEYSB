@@ -190,10 +190,10 @@ public class Game extends State {
         // Move all active entities.
         entityManager.moveEntities(-vertMovement);
 
-		// Do our collision detection.
-		entityManager.checkCollisions(this.scene.getJetpack());
+		// Check for any cases where entities in the scene have collided with the jetpack.
+		this.scene.getJetpack().checkForCollision(this.entityManager.getActiveEntities());
 
-		// Draw the current game!
+		// Draw the current game state!
         drawState();
 	}
 
@@ -219,10 +219,11 @@ public class Game extends State {
 		// Draw the scene.
 		this.scene.draw(batch);
 
-
 		cloudGenerator.drawCloudsInForeground(batch);
+		// Draw the height counter.
         heightCounter.drawScore(batch, getScore(), false);
-		fuelTankHUD.drawFuelTankHud(batch, this.scene.getJetpack().getFuelLevelPercentageLeft(), this.scene.getJetpack().getFuelLevelPercentageRight());
+		// Draw the fuel levels.
+		fuelTankHUD.drawFuelTankHud(batch, this.scene.getJetpack().getLeftEngine().getFuelLevelPercentage(), this.scene.getJetpack().getRightEngine().getFuelLevelPercentage());
         // Draw our launch prompt if the user hasnt launched yet.
         if(!this.scene.getJetpack().hasLaunched()) {
             launcherPromptBackground.draw(batch);

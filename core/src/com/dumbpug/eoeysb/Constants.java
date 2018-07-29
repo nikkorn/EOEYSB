@@ -9,6 +9,7 @@ public class Constants {
 
 	/** jetpack */
 	public static final float JETPACK_WIDTH                     = Gdx.graphics.getWidth() / 2.5f;
+	public static final float JETPACK_HEIGHT                    = JETPACK_WIDTH * 0.357f;
 	public static final float JETPACK_INITIAL_Y_OFFSET          = Gdx.graphics.getWidth() / 2.5f;
 	public static final float JETPACK_GRAVITY                   = MOVEMENT_UNIT / 2.5f;
 	public static final float JETPACK_MAX_VELOCITY              = MOVEMENT_UNIT * 1.6f;
@@ -16,6 +17,7 @@ public class Constants {
 	public static final float JETPACK_ACCELERATION              = MOVEMENT_UNIT / 50f;
 	public static final float JETPACK_ROTATIONAL_ACCELERATION   = 0.1f;
 	public static final float JETPACK_ENGINE_OFFSET             = JETPACK_WIDTH * 0.357f;
+	public static final float JETPACK_ENGINE_COLLISION_RADIUS   = (JETPACK_HEIGHT / 2f) * 0.85f;
 
 	/** fuelling */
 	public static final double FUELLING_TANK_LIMIT       = 120;

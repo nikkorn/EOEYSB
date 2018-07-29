@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.eoeysb.Constants;
-import com.dumbpug.eoeysb.scene.jetpack.JetPack;
+import com.dumbpug.eoeysb.scene.jetpack.Engine;
 
 /**
- * Created by nik on 05/02/16.
+ * A fuel pod that floats through space.
  */
 public class FloatingFuelPod implements Entity {
     private float textureRotation;
@@ -50,23 +50,13 @@ public class FloatingFuelPod implements Entity {
     }
 
     /**
-     * Called when this entity collides with the left engine of our jetpack.
-     * @param jetPack
+     * Called when this entity collides with an engine of our jetpack.
+     * @param engine The engine we are colliding with.
      */
-    public void leftEngineCollision(JetPack jetPack) {
-        // Top up the fuel for our left engine.
-        jetPack.addFuelLeft();
-        // Set this entity as inactive.
-        this.setActive(false);
-    }
-
-    /**
-     * Called when this entity collides with the left engine of our jetpack.
-     * @param jetPack
-     */
-    public void rightEngineCollision(JetPack jetPack) {
-        // Top up the fuel for our left engine.
-        jetPack.addFuelRight();
+    @Override
+    public void onEngineCollision(Engine engine) {
+        // Top up the fuel for our engine.
+        engine.refuel();
         // Set this entity as inactive.
         this.setActive(false);
     }

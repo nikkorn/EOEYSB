@@ -5,13 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dumbpug.eoeysb.scene.jetpack.JetPack;
-import com.dumbpug.eoeysb.scene.jetpack.JetPackCollidableState;
-
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by Nikolas Howard.
+ * Manager of entities in a scene.
  */
 public class EntityManager {
     public static final int MAX_PROPELLOR_FUEL_PODS = 3;
@@ -117,33 +115,27 @@ public class EntityManager {
         }
     }
 
-    public void checkCollisions(JetPack jetPack) {
-        // Get our jetpack collidable state.
-        JetPackCollidableState collidableState = jetPack.getCollidableState();
+    /**
+     * Get all active entities.
+     * @return All active entities.
+     */
+    public ArrayList<Entity> getActiveEntities() {
+        // Create a list to hold all of the entities.
+        ArrayList<Entity> entities = new ArrayList<Entity>();
         // Are we colliding with any propellor fuel pods?
-        for(com.dumbpug.eoeysb.scene.entities.PropellorFuelPod propellorFuelPod : propellorFuelPods) {
+        for(PropellorFuelPod propellorFuelPod : propellorFuelPods) {
             if(propellorFuelPod.isActive()){
-                // Has this entity collided with our engines?
-                if(collidableState.collidesWithLeftEngine(propellorFuelPod.getOriginX(), propellorFuelPod.getOriginY(), propellorFuelPod.getCollisionRadius())) {
-                    propellorFuelPod.leftEngineCollision(jetPack);
-                } else if (collidableState.collidesWithRightEngine(propellorFuelPod.getOriginX(), propellorFuelPod.getOriginY(), propellorFuelPod.getCollisionRadius())) {
-                    propellorFuelPod.rightEngineCollision(jetPack);
-                }
+                entities.add(propellorFuelPod);
             }
         }
         // Are we colliding with any floating fuel pods?
-        for(com.dumbpug.eoeysb.scene.entities.FloatingFuelPod floatingFuelPod : floatingFuelPods) {
+        for(FloatingFuelPod floatingFuelPod : floatingFuelPods) {
             if(floatingFuelPod.isActive()){
-                // Has this entity collided with our engines?
-                if(collidableState.collidesWithLeftEngine(floatingFuelPod.getOriginX(), floatingFuelPod.getOriginY(), floatingFuelPod.getCollisionRadius())) {
-                    floatingFuelPod.leftEngineCollision(jetPack);
-                } else if (collidableState.collidesWithRightEngine(floatingFuelPod.getOriginX(), floatingFuelPod.getOriginY(), floatingFuelPod.getCollisionRadius())) {
-                    floatingFuelPod.rightEngineCollision(jetPack);
-                }
+                entities.add(floatingFuelPod);
             }
         }
-
-        // ...
+        // Return all of our active entities.
+        return entities;
     }
 
     public boolean winsSpawn(int spawnChance) {
@@ -168,8 +160,6 @@ public class EntityManager {
                 floatingFuelPod.draw(batch, floatingFuelPodSprite);
             }
         }
-
-        // ...
     }
 
     public void moveEntities(double playerOffset) {
@@ -185,7 +175,5 @@ public class EntityManager {
                 floatingFuelPod.move(playerOffset);
             }
         }
-
-        // ...
     }
 }

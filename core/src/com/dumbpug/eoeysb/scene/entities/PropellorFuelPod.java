@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dumbpug.eoeysb.Constants;
+import com.dumbpug.eoeysb.scene.jetpack.Engine;
 import com.dumbpug.eoeysb.scene.jetpack.JetPack;
 
 /**
- * Created by Nikolas Howard.
+ * A fuel pods with a propellor.
+ * Should spawn in the atmosphere.
  */
 public class PropellorFuelPod implements Entity {
     private float textureRotation;
@@ -17,13 +19,19 @@ public class PropellorFuelPod implements Entity {
     private int spriteSize;
     private boolean isActive = false;
     private int activeScreenBounds;
-    private float step = Constants.MOVEMENT_UNIT/3f;
+    private float step = Constants.MOVEMENT_UNIT / 3f;
 
     // Spawn related
     public static long spawnCooldown = 4000;
     public static long lastSpawned = System.currentTimeMillis();
     public static int spawnChance = 5;
 
+    /**
+     * Create a new instance of the PropellorFuelPod class.
+     * @param posX
+     * @param posY
+     * @param directionalRotation
+     */
     public PropellorFuelPod(float posX, float posY, float directionalRotation) {
         this.posX = (int) posX;
         this.posY = (int) posY;
@@ -50,23 +58,13 @@ public class PropellorFuelPod implements Entity {
     }
 
     /**
-     * Called when this entity collides with the left engine of our jetpack.
-     * @param jetPack
+     * Called when this entity collides with an engine of our jetpack.
+     * @param engine The engine we are colliding with.
      */
-    public void leftEngineCollision(JetPack jetPack) {
-        // Top up the fuel for our left engine.
-        jetPack.addFuelLeft();
-        // Set this entity as inactive.
-        this.setActive(false);
-    }
-
-    /**
-     * Called when this entity collides with the left engine of our jetpack.
-     * @param jetPack
-     */
-    public void rightEngineCollision(JetPack jetPack) {
-        // Top up the fuel for our left engine.
-        jetPack.addFuelRight();
+    @Override
+    public void onEngineCollision(Engine engine) {
+        // Top up the fuel for our engine.
+        engine.refuel();
         // Set this entity as inactive.
         this.setActive(false);
     }

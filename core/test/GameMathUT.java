@@ -1,5 +1,5 @@
-import com.dumbpug.eoeysb.Math.GameMath;
-import com.dumbpug.eoeysb.Math.ScreenPoint;
+import com.dumbpug.eoeysb.math.GameMath;
+import com.dumbpug.eoeysb.math.Position;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
@@ -22,7 +22,7 @@ public class GameMathUT {
 
     @Test
     public void checkScreenPoint() {
-        ScreenPoint sp = new ScreenPoint();
+        Position sp = new Position();
         // Move right
         GameMath.getTargetPosition(1, 1, 0, 1, sp);
         assertTrue(sp.getX() == 2);

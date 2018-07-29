@@ -1,11 +1,13 @@
-package com.dumbpug.eoeysb.Math;
+package com.dumbpug.eoeysb.math;
 
 /**
- * Created by Nikolas Howard.
+ * Represents a position.
  */
-public class ScreenPoint {
-    private double posX = 0;
-    private double posY = 0;
+public class Position {
+    /**
+     * The x/y position.
+     */
+    private double posX = 0, posY = 0;
 
     public void setY(double posY) { this.posY = posY; }
 

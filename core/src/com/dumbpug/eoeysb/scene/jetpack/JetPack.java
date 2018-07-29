@@ -5,10 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.eoeysb.Constants;
-import com.dumbpug.eoeysb.Math.GameMath;
-import com.dumbpug.eoeysb.Math.ScreenPoint;
+import com.dumbpug.eoeysb.math.GameMath;
+import com.dumbpug.eoeysb.scene.entities.Entity;
+import java.util.ArrayList;
 
 public class JetPack {
+	/**
+	 * The engines.
+	 */
+	private Engine leftEngine = new Engine(), rightEngine = new Engine();
 	/**
 	 * The jetpack sprite.
 	 */
@@ -34,24 +39,6 @@ public class JetPack {
 	 */
 	private int startingHeight;
 	/**
-	 * The screen points of both engines.
-	 */
-    private ScreenPoint leftEngineScreenPoint = new ScreenPoint();
-    private ScreenPoint rightEngineScreenPoint = new ScreenPoint();
-	/**
-	 * The fuel levels of the jetpack engines.
-	 */
-	private double fuelLevelLeft = Constants.FUELLING_TANK_LIMIT, fuelLevelRight = Constants.FUELLING_TANK_LIMIT;
-	/**
-	 *  The effect states of our engines.
-	 */
-	JetPackEffectDrawer.EngineState leftEngineState = JetPackEffectDrawer.EngineState.NONE;
-	JetPackEffectDrawer.EngineState rightEngineState = JetPackEffectDrawer.EngineState.NONE;
-	/**
-	 * The collidable state of our engines.
-	 */
-	private JetPackCollidableState collidableState = null;
-	/**
 	 * Manages the drawing of certain JetPack related elements.
 	 */
 	private JetPackEffectDrawer effectDrawer;
@@ -61,11 +48,13 @@ public class JetPack {
 	 */
 	public JetPack() {
 		jetPackSprite = new Sprite(new Texture(Gdx.files.internal("MiscImages/jet.png")));
-		jetPackSprite.setSize(Constants.JETPACK_WIDTH, Constants.JETPACK_WIDTH * (jetPackSprite.getHeight() / jetPackSprite.getWidth()));
-		jetPackSprite.setOrigin(jetPackSprite.getWidth() / 2, jetPackSprite.getHeight() / 2);
+		jetPackSprite.setSize(Constants.JETPACK_WIDTH, Constants.JETPACK_HEIGHT);
+		jetPackSprite.setOrigin(Constants.JETPACK_WIDTH / 2, Constants.JETPACK_HEIGHT / 2);
 		// Set the initial jetpack position.
-		this.posX = (Gdx.graphics.getWidth() / 2) - (jetPackSprite.getWidth() / 2);
-		this.posY = Constants.JETPACK_INITIAL_Y_OFFSET - (jetPackSprite.getHeight() / 2);
+		this.posX = (Gdx.graphics.getWidth() / 2) - (Constants.JETPACK_WIDTH / 2);
+		this.posY = Constants.JETPACK_INITIAL_Y_OFFSET - (Constants.JETPACK_HEIGHT / 2);
+		// Give the jetpack engines their initial positions.
+		updateEnginePositions();
 		// Set the jetpack sprite position.
 		jetPackSprite.setPosition(posX, posY);
 		// Set the starting/height windowed height.
@@ -74,6 +63,22 @@ public class JetPack {
 		this.highestWindowedHeight = (int) this.posY;;
 		// Initialise our effect drawer.
 		effectDrawer = new JetPackEffectDrawer(jetPackSprite);
+	}
+
+	/**
+	 * Get the left engine.
+	 * @return The left engine.
+     */
+	public Engine getLeftEngine() {
+		return this.leftEngine;
+	}
+
+	/**
+	 * Get the right engine.
+	 * @return The right engine.
+	 */
+	public Engine getRightEngine() {
+		return this.rightEngine;
 	}
 
 	/**
@@ -96,16 +101,11 @@ public class JetPack {
 				return 0f;
 			}
 		}
-		// Let us first check to see if the engines have the fuel to move.
-		if(fuelLevelLeft == 0) {
-			// If we dont have fuel in this engine just ignore the press.
-			leftEnginePress = false;
-		}
-		if(fuelLevelRight == 0) {
-			// If we dont have fuel in this engine just ignore the press.
-			rightEnginePress = false;
-		}
-		if (leftEnginePress && rightEnginePress) {
+		// Update our engines and get whether they were firing as part of this move.
+		boolean leftEngineFired  = this.leftEngine.update(leftEnginePress);
+		boolean rightEngineFired = this.rightEngine.update(rightEnginePress);
+		// Determine how to move the pack, based on which engines have fired.
+		if (leftEngineFired && rightEngineFired) {
 			velX += Constants.JETPACK_ACCELERATION * Math.cos(Math.toRadians(rotation + 90));
 			velY += Constants.JETPACK_ACCELERATION * Math.sin(Math.toRadians(rotation + 90));
 			// Don't allow the jetpack movement to exceed the max velocity.
@@ -115,41 +115,27 @@ public class JetPack {
 			if(velY > Constants.JETPACK_MAX_VELOCITY) {
 				velY = Constants.JETPACK_MAX_VELOCITY;
 			}
-			// We've used fuel for both engines.
-			this.fuelLevelLeft  -= Constants.FUELLING_TICK_USE;
-			this.fuelLevelRight -= Constants.FUELLING_TICK_USE;
 			// Decrease rotational velocity towards 0.
 			reduceRotationalVelocityToZero();
-		} else if (rightEnginePress) {
-			// decrease main velocity
+		} else if (rightEngineFired) {
+			// decrease main velocity.
 			reducePackVelocityToZero();
-			// increase right rotational velocity
+			// increase right rotational velocity.
 			if (rotationalVelocity + Constants.JETPACK_ROTATIONAL_ACCELERATION <= Constants.JETPACK_MAX_ROTATIONAL_VELOCITY) {
 				rotationalVelocity += Constants.JETPACK_ROTATIONAL_ACCELERATION;
 			}
-			// We've used fuel for right engine.
-			this.fuelLevelRight -= Constants.FUELLING_TICK_USE;
-		} else if (leftEnginePress) {
-			// decrease main velocity
+		} else if (leftEngineFired) {
+			// decrease main velocity.
 			reducePackVelocityToZero();
-			// increase left rotational velocity
+			// increase left rotational velocity.
 			if (rotationalVelocity - Constants.JETPACK_ROTATIONAL_ACCELERATION >= -Constants.JETPACK_MAX_ROTATIONAL_VELOCITY) {
 				rotationalVelocity -= Constants.JETPACK_ROTATIONAL_ACCELERATION;
 			}
-			// We've used fuel for left engine.
-			this.fuelLevelLeft -= Constants.FUELLING_TICK_USE;
 		} else {
-			// decrease rotational velocity towards 0
+			// decrease rotational velocity towards 0.
 			reduceRotationalVelocityToZero();
-			// decrease main velocity
+			// decrease main velocity.
 			reducePackVelocityToZero();
-		}
-		// Clear up any negative fuel levels
-		if(this.fuelLevelLeft < 0) {
-			this.fuelLevelLeft = 0;
-		}
-		if(this.fuelLevelRight < 0) {
-			this.fuelLevelRight = 0;
 		}
 		// Reset the rotation of the jetpack to 0 so we can carry out some stuff.
 		jetPackSprite.setRotation(0);
@@ -185,29 +171,43 @@ public class JetPack {
 		jetPackSprite.setRotation(rotation + rotationalVelocity);
 		// Apply gravity to the pack.
 		this.posY -= (Constants.JETPACK_GRAVITY * (Constants.JETPACK_MAX_VELOCITY - this.velY));
-		// Let us set our engine state variables for our effect drawer.
-		// TODO Add conditions for when engine is damaged/sputtering etc.
-		if(leftEnginePress) {
-			this.leftEngineState = JetPackEffectDrawer.EngineState.FIRED;
-		} else {
-			this.leftEngineState = JetPackEffectDrawer.EngineState.NONE;
-		}
-		if(rightEnginePress) {
-			this.rightEngineState = JetPackEffectDrawer.EngineState.FIRED;
-		} else {
-			this.rightEngineState = JetPackEffectDrawer.EngineState.NONE;
-		}
+		// Update the engine positions to reflect the new pack position.
+		updateEnginePositions();
 		// Return the offset of the jetpack movement.
 		return jetpackScreenOffset;
 	}
 
 	/**
-	 * Draw all elements of the jet pack.
-	 * @param batch
+	 * Check for any active entities that are colliding with either engine.
+	 * @param activeEntities The active entities.
+     */
+	public void checkForCollision(ArrayList<Entity> activeEntities) {
+		// For every active entity...
+		for (Entity entity : activeEntities) {
+			// ... check for collisions with the left engine and ...
+			this.leftEngine.checkForCollision(entity);
+			// ... check for collisions with the right engine.
+			this.rightEngine.checkForCollision(entity);
+		}
+	};
+
+	/**
+	 * Update te positions of both engines.
+	 */
+	public void updateEnginePositions() {
+		GameMath.getTargetPosition(jetPackSprite.getX() + (jetPackSprite.getWidth() / 2),
+				jetPackSprite.getY() + (jetPackSprite.getHeight() / 2), rotation - 180, Constants.JETPACK_ENGINE_OFFSET, this.leftEngine.getPosition());
+		GameMath.getTargetPosition(jetPackSprite.getX() + (jetPackSprite.getWidth() / 2),
+				jetPackSprite.getY() + (jetPackSprite.getHeight() / 2), rotation, Constants.JETPACK_ENGINE_OFFSET, this.rightEngine.getPosition());
+	}
+
+	/**
+	 * Draw the jetpack, including any engine effects.
+	 * @param batch The sprite batch to use.
 	 */
 	public void draw(SpriteBatch batch) {
 		// Draw our jetpack effects.
-		effectDrawer.draw(batch, this.leftEngineState, this.rightEngineState);
+		effectDrawer.draw(batch, this.leftEngine.getState(), this.rightEngine.getState());
 		// Draw our jetpack.
 		jetPackSprite.draw(batch);
 	}
@@ -265,31 +265,9 @@ public class JetPack {
 
 	/**
 	 * Return the highest score that this jetpack has achieved within the bounds of the window.
-	 * @return
+	 * @return The highest score that this jetpack has achieved within the bounds of the window.
 	 */
 	public int getHighestWindowedScore() { return (int) (highestWindowedHeight-startingHeight); }
-
-	public double getFuelLevelPercentageRight() {
-		return (fuelLevelRight / Constants.FUELLING_TANK_LIMIT) * 100;
-	}
-
-	public double getFuelLevelPercentageLeft() {
-		return (fuelLevelLeft / Constants.FUELLING_TANK_LIMIT) * 100;
-	}
-
-	/**
-	 * Refill the fuel for the right engine.
-	 */
-	public void addFuelRight() {
-		this.fuelLevelRight = Constants.FUELLING_TANK_LIMIT;
-	}
-
-	/**
-	 * Refill the fuel for the left engine.
-	 */
-	public void addFuelLeft() {
-		this.fuelLevelLeft = Constants.FUELLING_TANK_LIMIT;
-	}
 
 	/**
 	 * Return whether our jetpack has dropped off the bottom of our screen.
@@ -298,23 +276,6 @@ public class JetPack {
 	 */
 	public boolean hasDroppedOut() {
 	 	return this.posY < -Constants.JETPACK_WIDTH;
-	}
-
-	/**
-	 * Get the collidable state of the JetPack.
-	 * @return collidable state.
-	 */
-	public JetPackCollidableState getCollidableState() {
-		GameMath.getTargetPosition(jetPackSprite.getX() + (jetPackSprite.getWidth()/2),
-				jetPackSprite.getY() + (jetPackSprite.getHeight()/2), rotation - 180, Constants.JETPACK_ENGINE_OFFSET, leftEngineScreenPoint);
-		GameMath.getTargetPosition(jetPackSprite.getX() + (jetPackSprite.getWidth()/2),
-				jetPackSprite.getY() + (jetPackSprite.getHeight()/2), rotation, Constants.JETPACK_ENGINE_OFFSET, rightEngineScreenPoint);
-		if(this.collidableState == null) {
-			collidableState = new JetPackCollidableState(leftEngineScreenPoint, rightEngineScreenPoint, jetPackSprite.getHeight());
-		} else {
-			collidableState.set(leftEngineScreenPoint, rightEngineScreenPoint);
-		}
-		return collidableState;
 	}
 
 	/**

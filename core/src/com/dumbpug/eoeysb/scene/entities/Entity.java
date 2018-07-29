@@ -1,9 +1,9 @@
 package com.dumbpug.eoeysb.scene.entities;
 
-import com.dumbpug.eoeysb.scene.jetpack.JetPack;
+import com.dumbpug.eoeysb.scene.jetpack.Engine;
 
 /**
- * Represents an entity in the scene
+ * Represents an entity in the scene.
  */
 public interface Entity {
     public void setActive(boolean isActive);
@@ -16,6 +16,5 @@ public interface Entity {
     public void setPosY(float posY);
     public void setDirectionalRotation(float directionalRotation);
     public float getCollisionRadius();
-    public void leftEngineCollision(JetPack jetPack);
-    public void rightEngineCollision(JetPack jetPack);
+    public void onEngineCollision(Engine engine);
 }
