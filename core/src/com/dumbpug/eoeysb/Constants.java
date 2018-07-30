@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 
 public class Constants {
 	public static final float LOGO_SCALE 	                    = 0.17f;
-	public static final float MOVEMENT_UNIT                     = Gdx.graphics.getHeight()*0.005f;
-	public static final float METER 		                    = Gdx.graphics.getHeight()*0.03f;
+	public static final float MOVEMENT_UNIT                     = Gdx.graphics.getWidth() * 0.0075f;
+	public static final float METER 		                    = Gdx.graphics.getWidth() * 0.1f;
 
 	/** jetpack */
 	public static final float JETPACK_WIDTH                     = Gdx.graphics.getWidth() / 2.5f;
@@ -20,6 +20,6 @@ public class Constants {
 	public static final float JETPACK_ENGINE_COLLISION_RADIUS   = (JETPACK_HEIGHT / 2f) * 0.85f;
 
 	/** fuelling */
-	public static final double FUELLING_TANK_LIMIT       = 120;
-	public static final double FUELLING_TICK_USE         = 0.1;
+	public static final double FUELLING_TANK_LIMIT              = 120;
+	public static final double FUELLING_TICK_USE                = 0.1;
 }
