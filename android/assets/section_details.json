@@ -1,0 +1,17 @@
+[
+  {
+    "height": 200,
+    "tokens": 20,
+    "height_range": {
+      "from": 20,
+      "to":60
+    },
+    "entity_spawns": [
+      {
+        "id": 0,
+        "x": 23,
+        "y": 14
+      }
+    ]
+  }
+]
