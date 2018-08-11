@@ -68,19 +68,19 @@ public class Scene {
     }
 
     /**
-     * Get the player height.
-     * @return The player height.
+     * Get the current player height in meters.
+     * @return The current player height in meters.
      */
-    public float getPlayerHeight() {
-        return this.playerHeight;
+    public float getCurrentHeight() {
+        return (int) (this.playerHeight / Constants.METER);
     }
 
     /**
-     * Get the current score.
-     * @return The current score.
+     * Get the greatest height reached by the player in meters.
+     * @return The greatest height reached by the player in meters.
      */
-    public int getScore() {
-        return (int) ((getPlayerHeight() + jetpack.getHighestWindowedScore()) / Constants.METER);
+    public int getGreatestHeight() {
+        return (int) ((this.playerHeight + jetpack.getHighestWindowedScore()) / Constants.METER);
     }
 
     /**
@@ -113,8 +113,8 @@ public class Scene {
             // The user has lost! Only bother with logic that steps non interactive elements like clouds, birds, asteroids etc.
             // Display the results page if it is hidden.
             if(!resultPanel.isShowing()) {
-                int highScore = com.dumbpug.eoeysb.Game.getHighScore();
-                int score = getScore();
+                int highScore           = com.dumbpug.eoeysb.Game.getHighScore();
+                int score               = getGreatestHeight();
                 boolean gotNewHighScore = score > highScore;
                 if(gotNewHighScore) {
                     com.dumbpug.eoeysb.Game.setHighScore(score);

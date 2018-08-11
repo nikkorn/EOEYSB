@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class Section {
     /**
-     * The height of the section.
+     * The height of the section in meters.
      */
     private int height;
     /**
@@ -33,7 +33,7 @@ public class Section {
 
     /**
      * Create a new instance of the Section class.
-     * @param height The height of the section.
+     * @param height The height of the section in meters.
      * @param tokens The tokens held by this section when included as part of a lotto draw for generation.
      * @param heightRange The height range in which this section can be generated.
      * @param entitySpawns The entity spawns for this section.
@@ -45,6 +45,30 @@ public class Section {
         this.heightRange     = heightRange;
         this.entitySpawns    = entitySpawns;
         this.entityFactories = entityFactories;
+    }
+
+    /**
+     * Get the height range in which this section can be generated.
+     * @return The height range in which this section can be generated.
+     */
+    public HeightRange getHeightRange() {
+        return this.heightRange;
+    }
+
+    /**
+     * Get the number of the tokens held by this section when included as part of a lotto draw for generation.
+     * @return The number of the tokens held by this section when included as part of a lotto draw for generation.
+     */
+    public int getTokens() {
+        return this.tokens;
+    }
+
+    /**
+     * Get the height of the section in meters.
+     * @return The height of the section in meters.
+     */
+    public int getHeight() {
+        return this.height;
     }
 
     /**
