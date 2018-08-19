@@ -10,6 +10,7 @@ public class Constants {
 	/** Scene */
 	public static final int SCENE_HEIGHT_METERS                 = 2500;
 	public static final int SCENE_FIRST_SECTION_HEIGHT_METERS   = 25;
+	public static final float SCENE_DROPOUT                     = METER * 4;
 
 	/** Jetpack */
 	public static final float JETPACK_WIDTH                     = Gdx.graphics.getWidth() / 2.5f;
