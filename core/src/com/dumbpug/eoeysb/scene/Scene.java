@@ -134,7 +134,7 @@ public class Scene {
         }
 
         // Update the entities in the scene.
-        entities.update(this.getGreatestHeight(), -verticalClimb);
+        // entities.update(this.getGreatestHeight(), -verticalClimb);
 
         // Check for any cases where entities in the scene have collided with the jetpack.
         jetpack.checkForEntityCollisions(this.entities.getAll());

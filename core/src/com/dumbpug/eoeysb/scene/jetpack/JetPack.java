@@ -193,7 +193,7 @@ public class JetPack {
 	};
 
 	/**
-	 * Update te positions of both engines.
+	 * Update the positions of both engines.
 	 */
 	public void updateEnginePositions() {
 		GameMath.getTargetPosition(jetPackSprite.getX() + (jetPackSprite.getWidth() / 2),
