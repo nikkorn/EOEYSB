@@ -3,7 +3,7 @@ package com.dumbpug.eoeysb.scene;
 import com.dumbpug.eoeysb.Constants;
 import com.dumbpug.eoeysb.panel.ResultPanel;
 import com.dumbpug.eoeysb.scene.clouds.CloudGenerator;
-import com.dumbpug.eoeysb.scene.entities.EntityManager;
+import com.dumbpug.eoeysb.scene.entities.Entities;
 import com.dumbpug.eoeysb.scene.jetpack.JetPack;
 
 /**
@@ -15,9 +15,9 @@ public class Scene {
      */
     private JetPack jetpack = new JetPack();
     /**
-     * The entity manager.
+     * The collection of all entities in the scene.
      */
-    private EntityManager entityManager = new EntityManager();
+    private Entities entities = new Entities();
     /**
      * The cloud generator.
      */
@@ -39,49 +39,47 @@ public class Scene {
      * Create a new instance of the Scene class.
      * @param resultPanel The result panel.
      */
-    public Scene(ResultPanel resultPanel) {
-        this.resultPanel = resultPanel;
-    }
+    public Scene(ResultPanel resultPanel) { this.resultPanel = resultPanel; }
 
     /**
      * Get the jetpack.
      * @return The jetpack;
      */
-    public JetPack getJetpack() {
-        return this.jetpack;
-    }
+    public JetPack getJetpack() { return this.jetpack; }
 
     /**
-     * Get the entity manager.
-     * @return The entity manager.
+     * Get the entities.
+     * @return The entities.
      */
-    public EntityManager getEntityManager() {
-        return this.entityManager;
+    public Entities getEntities() {
+        return this.entities;
     }
 
     /**
      * Get the cloud generator.
      * @return The cloud generator.
      */
-    public CloudGenerator getCloudGenerator() {
-        return this.cloudGenerator;
-    }
+    public CloudGenerator getCloudGenerator() { return this.cloudGenerator; }
 
     /**
      * Get the current player height in meters.
      * @return The current player height in meters.
      */
-    public float getCurrentHeight() {
-        return (int) (this.playerHeight / Constants.METER);
-    }
+    public float getCurrentHeight() { return (int)(this.playerHeight / Constants.METER); }
 
     /**
      * Get the greatest height reached by the player in meters.
      * @return The greatest height reached by the player in meters.
      */
-    public int getGreatestHeight() {
-        return (int) ((this.playerHeight + jetpack.getHighestWindowedScore()) / Constants.METER);
+    public float getGreatestHeight() {
+        return (this.playerHeight + jetpack.getHighestWindowedHeight()) / Constants.METER;
     }
+
+    /**
+     * Get the player score.
+     * @return The player score.
+     */
+    public int getScore() { return (int)getGreatestHeight(); }
 
     /**
      * Update the scene.
@@ -91,10 +89,12 @@ public class Scene {
     public void update(boolean isLeftThrusterButtonPressed, boolean isRightThrusterButtonPressed) {
         // Store the amount of distance we move up vertically as part of this update.
         float verticalClimb = 0;
+
         // Is the round still in progress?
         if(inProgress) {
             // Move our jetpack and get the amount we need to essentially move the scene down by.
             verticalClimb = jetpack.move(isLeftThrusterButtonPressed, isRightThrusterButtonPressed);
+
             // Move up screen.
             playerHeight += verticalClimb;
 
@@ -104,6 +104,7 @@ public class Scene {
             // Move the clouds both horizontally (will always move in this way) and vertically
             // depending on whether the jetpack has moved up.
             cloudGenerator.moveClouds(-verticalClimb);
+
             // Have we lost the game by dropping out?
             if(jetpack.hasDroppedOut()) {
                 // We have lost the game!
@@ -114,7 +115,7 @@ public class Scene {
             // Display the results page if it is hidden.
             if(!resultPanel.isShowing()) {
                 int highScore           = com.dumbpug.eoeysb.Game.getHighScore();
-                int score               = getGreatestHeight();
+                int score               = getScore();
                 boolean gotNewHighScore = score > highScore;
                 if(gotNewHighScore) {
                     com.dumbpug.eoeysb.Game.setHighScore(score);
@@ -132,14 +133,10 @@ public class Scene {
             cloudGenerator.moveClouds(-verticalClimb);
         }
 
-        // Attempt to generate some new entities.
-        // TODO Get sensible value for sky height percentage.
-        entityManager.generate(40f);
-
-        // Move all active entities.
-        entityManager.moveEntities(-verticalClimb);
+        // Update the entities in the scene.
+        entities.update(this.getGreatestHeight(), -verticalClimb);
 
         // Check for any cases where entities in the scene have collided with the jetpack.
-        jetpack.checkForCollision(this.entityManager.getActiveEntities());
+        jetpack.checkForEntityCollisions(this.entities.getAll());
     }
 }

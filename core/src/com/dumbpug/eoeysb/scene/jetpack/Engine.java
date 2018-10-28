@@ -1,7 +1,6 @@
 package com.dumbpug.eoeysb.scene.jetpack;
 
 import com.dumbpug.eoeysb.Constants;
-import com.dumbpug.eoeysb.math.GameMath;
 import com.dumbpug.eoeysb.math.Position;
 import com.dumbpug.eoeysb.scene.entities.Entity;
 
@@ -26,25 +25,19 @@ public class Engine {
      * Get the position of the engine.
      * @return The position of the engine.
      */
-    public Position getPosition() {
-        return this.position;
-    }
+    public Position getPosition() { return this.position; }
 
     /**
      * Get the engine state.
      * @return The engine state.
      */
-    public EngineState getState() {
-        return this.state;
-    }
+    public EngineState getState() { return this.state; }
 
     /**
      * Get the remaining fuel level as a percentage.
      * @return The remaining fuel level as a percentage.
      */
-    public double getFuelLevelPercentage() {
-        return (this.fuelLevel / Constants.FUELLING_TANK_LIMIT) * 100;
-    }
+    public double getFuelLevelPercentage() { return (this.fuelLevel / Constants.FUELLING_TANK_LIMIT) * 100; }
 
     /**
      * Update the engine, passing a flag defining whether to attempt to fire it..
@@ -73,18 +66,14 @@ public class Engine {
     /**
      * Refuel the engine.
      */
-    public void refuel() {
-        this.fuelLevel = Constants.FUELLING_TANK_LIMIT;
-    }
+    public void refuel() { this.fuelLevel = Constants.FUELLING_TANK_LIMIT; }
 
     /**
      * Checks whether the engine is colliding with the specified entity and acts accordingly.
      * @param entity The entity to check for a collision with.
      */
-    public void checkForCollision(Entity entity) {
-        if (GameMath.circlesIntersect(position.getX(), position.getY(), Constants.JETPACK_ENGINE_COLLISION_RADIUS,
-                entity.getOriginX(), entity.getOriginY(), entity.getCollisionRadius())) {
-            // The entity is colliding with this engine! The entity should handle this.
+    public void checkForEntityCollision(Entity entity) {
+        if (entity.isCollidingWithEngine(this)) {
             entity.onEngineCollision(this);
         }
     }

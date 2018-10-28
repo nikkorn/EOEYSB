@@ -90,12 +90,12 @@ public class SceneDrawer {
      */
     public void draw(SpriteBatch batch, Scene scene, ResultPanel resultPanel) {
         // Update positions of backdrops based on player height.
-        blueSkyBase.setPosition(blueSkyBase.getX(), -(scene.getPlayerHeight() * blueSkyBaseMovementVertMultiplier));
-        grassBase.setPosition(grassBase.getX(), -(scene.getPlayerHeight() * grassBaseMovementVertMultiplier));
-        launcherBase.setPosition(launcherBase.getX(), (grassBase.getHeight()-(launcherBase.getHeight()/1.35f))-(scene.getPlayerHeight() * grassBaseMovementVertMultiplier));
+        blueSkyBase.setPosition(blueSkyBase.getX(), -(scene.getCurrentHeight() * blueSkyBaseMovementVertMultiplier));
+        grassBase.setPosition(grassBase.getX(), -(scene.getCurrentHeight() * grassBaseMovementVertMultiplier));
+        launcherBase.setPosition(launcherBase.getX(), (grassBase.getHeight()-(launcherBase.getHeight()/1.35f))-(scene.getCurrentHeight() * grassBaseMovementVertMultiplier));
         // Set the position of the blue sky/black space background based on our height.
-        if(((scene.getPlayerHeight() * fullSkyMovementVertMultiplier) + Gdx.graphics.getHeight()) < fullSkyBackground.getHeight()){
-            fullSkyBackground.setPosition(fullSkyBackground.getX(), -(scene.getPlayerHeight() * fullSkyMovementVertMultiplier));
+        if(((scene.getCurrentHeight() * fullSkyMovementVertMultiplier) + Gdx.graphics.getHeight()) < fullSkyBackground.getHeight()){
+            fullSkyBackground.setPosition(fullSkyBackground.getX(), -(scene.getCurrentHeight() * fullSkyMovementVertMultiplier));
         } else {
             fullSkyBackground.setPosition(fullSkyBackground.getX(), -(fullSkyBackground.getHeight() - Gdx.graphics.getHeight()));
         }
@@ -110,7 +110,7 @@ public class SceneDrawer {
         // Draw the background panels.
         fullSkyBackground.draw(batch);
         blueSkyBase.draw(batch);
-        batch.draw(currentMountainFrame, 0, 0 - (mountainRangeMovementVertMultiplier * scene.getPlayerHeight()), Gdx.graphics.getWidth(), Gdx.graphics.getWidth() * mountainRangeAspectRatio);
+        batch.draw(currentMountainFrame, 0, 0 - (mountainRangeMovementVertMultiplier * scene.getCurrentHeight()), Gdx.graphics.getWidth(), Gdx.graphics.getWidth() * mountainRangeAspectRatio);
         grassBase.draw(batch);
         launcherBase.draw(batch);
         // Draw all of the clouds in the background so that they are behind all other entities.
@@ -118,7 +118,7 @@ public class SceneDrawer {
         // Draw the jetpack.
         scene.getJetpack().draw(batch);
         // Draw all of the active entities in the scene.
-        scene.getEntityManager().draw(batch);
+        // scene.getEntityManager().draw(batch);
         // Draw all of the clouds in the foreground so that they are in front of all other entities.
         scene.getCloudGenerator().drawCloudsInForeground(batch);
         // Draw the height counter.

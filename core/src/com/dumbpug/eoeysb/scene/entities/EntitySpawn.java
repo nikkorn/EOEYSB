@@ -1,4 +1,4 @@
-package com.dumbpug.eoeysb.scene.section;
+package com.dumbpug.eoeysb.scene.entities;
 
 import com.badlogic.gdx.utils.JsonValue;
 

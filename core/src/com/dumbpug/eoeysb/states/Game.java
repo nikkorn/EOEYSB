@@ -74,8 +74,4 @@ public class Game extends State {
 
 	@Override
 	public void renderStateLoading() {}
-
-	public int getScore() {
-		return (int) ((this.scene.getPlayerHeight() + this.scene.getJetpack().getHighestWindowedScore()) / Constants.METER);
-	}
 }

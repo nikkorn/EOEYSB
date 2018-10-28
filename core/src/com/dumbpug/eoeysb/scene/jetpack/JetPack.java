@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dumbpug.eoeysb.Constants;
 import com.dumbpug.eoeysb.math.GameMath;
 import com.dumbpug.eoeysb.scene.entities.Entity;
-import java.util.ArrayList;
+
+import java.util.Collection;
 
 public class JetPack {
 	/**
@@ -181,13 +182,13 @@ public class JetPack {
 	 * Check for any active entities that are colliding with either engine.
 	 * @param activeEntities The active entities.
      */
-	public void checkForCollision(ArrayList<Entity> activeEntities) {
+	public void checkForEntityCollisions(Collection<Entity> activeEntities) {
 		// For every active entity...
 		for (Entity entity : activeEntities) {
 			// ... check for collisions with the left engine and ...
-			this.leftEngine.checkForCollision(entity);
+			this.leftEngine.checkForEntityCollision(entity);
 			// ... check for collisions with the right engine.
-			this.rightEngine.checkForCollision(entity);
+			this.rightEngine.checkForEntityCollision(entity);
 		}
 	};
 
@@ -264,10 +265,10 @@ public class JetPack {
 	}
 
 	/**
-	 * Return the highest score that this jetpack has achieved within the bounds of the window.
-	 * @return The highest score that this jetpack has achieved within the bounds of the window.
+	 * Return the highest height that this jetpack has reached within the bounds of the window.
+	 * @return The highest height that this jetpack has reached within the bounds of the window.
 	 */
-	public int getHighestWindowedScore() { return (int) (highestWindowedHeight-startingHeight); }
+	public float getHighestWindowedHeight() { return highestWindowedHeight - startingHeight; }
 
 	/**
 	 * Return whether our jetpack has dropped off the bottom of our screen.

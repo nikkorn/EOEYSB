@@ -1,12 +1,12 @@
-package com.dumbpug.eoeysb.scene.section;
+package com.dumbpug.eoeysb.scene.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dumbpug.eoeysb.Constants;
-import com.dumbpug.eoeysb.scene.entities.Entity;
-import com.dumbpug.eoeysb.scene.entities.IEntityFactory;
 import com.dumbpug.eoeysb.scene.entities.factories.FloatingFuelPodFactory;
+import com.dumbpug.eoeysb.scene.section.HeightRange;
+import com.dumbpug.eoeysb.scene.section.Section;
 import com.dumbpug.lotto.Lotto;
 import java.util.ArrayList;
 import java.util.HashMap;

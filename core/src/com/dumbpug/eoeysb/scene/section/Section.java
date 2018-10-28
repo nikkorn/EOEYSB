@@ -1,7 +1,7 @@
 package com.dumbpug.eoeysb.scene.section;
 
-import com.dumbpug.eoeysb.scene.entities.Entity;
-import com.dumbpug.eoeysb.scene.entities.IEntityFactory;
+import com.dumbpug.eoeysb.scene.entities.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,7 +25,7 @@ public class Section {
     /**
      * The entity spawns for this section.
      */
-    private ArrayList<EntitySpawn> entitySpawns;
+    private ArrayList<com.dumbpug.eoeysb.scene.entities.EntitySpawn> entitySpawns;
     /**
      * The entity factories.
      */
@@ -39,7 +39,7 @@ public class Section {
      * @param entitySpawns The entity spawns for this section.
      * @param entityFactories The entity factories.
      */
-    public Section(int height, int tokens, HeightRange heightRange, ArrayList<EntitySpawn> entitySpawns, HashMap<Integer, IEntityFactory> entityFactories) {
+    public Section(int height, int tokens, HeightRange heightRange, ArrayList<com.dumbpug.eoeysb.scene.entities.EntitySpawn> entitySpawns, HashMap<Integer, IEntityFactory> entityFactories) {
         this.height          = height;
         this.tokens          = tokens;
         this.heightRange     = heightRange;
@@ -79,7 +79,7 @@ public class Section {
         // Create a list to hold our generated entities.
         ArrayList<Entity> generated = new ArrayList<Entity>();
         // We will generate an entity for each entity spawn defined for this section.
-        for (EntitySpawn spawn : this.entitySpawns) {
+        for (com.dumbpug.eoeysb.scene.entities.EntitySpawn spawn : this.entitySpawns) {
             // We expect that there is a entity factory for this spawn.
             if (!this.entityFactories.containsKey(spawn.getEntityTypeID())) {
                 throw new RuntimeException("There was no entity factory for entity type: " + spawn.getEntityTypeID());
